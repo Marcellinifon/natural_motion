@@ -4,12 +4,6 @@
 
 <p align="center"><strong>Wakam Tchinda Henoch · Guangwei Li · Suanon Ifon Felix Marcellin · Haojun Qu · Jinping Li</strong></p>
 
-<p align="center">
-![Python](https://img.shields.io/badge/Python-3.13-blue)
-![NumPy](https://img.shields.io/badge/NumPy-Required-brightgreen)
-![Ruckig](https://img.shields.io/badge/Ruckig-Required-orange)
-![Fairino](https://img.shields.io/badge/Fairino-RPC-purple)
-</p>
 
 </div>
 
