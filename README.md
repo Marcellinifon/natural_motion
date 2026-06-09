@@ -144,9 +144,99 @@ During execution, you will be prompted to:
 - The path generation assumes planar shapes in the XY plane at constant height.
 - If inverse kinematics fails for a generated pose, execution stops and reports the failing waypoint.
 
+## Other Scripts in this Workspace
+
+### `nod_yes.py`
+
+- Purpose: run a ``yes`` nod gesture by moving the robot through a predefined head/upper-body motion sequence.
+- Motion sequence: ``ALERT`` → ``NOD_BASE`` → ``NOD_DOWN_FWD`` → ``NOD_BASE`` → ``NOD_DOWN_FWD`` → ``NOD_BASE`` → ``ALERT``.
+- Pose definitions are expressed as Cartesian ``[x, y, z, rx, ry, rz]`` values with the option to switch to direct joint-space waypoints.
+- The script uses a custom F5 forward-kinematics model and SciPy optimization to solve inverse kinematics for each Cartesian waypoint.
+- After IK, it builds a Ruckig-controlled trajectory and streams joint updates with ``ServoJ`` at 125 Hz.
+
+Example usage:
+
+```bash
+python nod_yes.py
+```
+
+What happens:
+- the robot first moves to the ``ALERT`` start posture using ``MoveJ``,
+- then the script executes the nod sequence over a smooth servo trajectory,
+- finally it holds the ``ALERT`` pose.
+
+### `refuse_no.py`
+
+- Purpose: execute a ``no`` refusal gesture using a side-to-side motion.
+- Motion sequence: ``ALERT`` → ``REFUSE_BASE`` → ``REFUSE_LEFT`` → ``REFUSE_BASE`` → ``REFUSE_RIGHT`` → ``REFUSE_BASE`` → ``REFUSE_LEFT`` → ``REFUSE_BASE`` → ``ALERT``.
+- The script uses the same FK/IK solver as ``nod_yes.py`` to ensure the Cartesian pose definitions map cleanly to feasible joint configurations.
+- It generates one continuous Ruckig trajectory for the whole gesture and streams it with ``ServoJ``.
+- A direct joint-space fallback is available by uncommenting the joint pose definitions and bypassing the IK solver.
+
+Example usage:
+
+```bash
+python refuse_no.py
+```
+
+What happens:
+- the robot moves to the initial ``ALERT`` pose,
+- performs the refusal head-shake gesture,
+- returns to ``ALERT`` and holds.
+
+### `Use_Case1_Rehabilitation.py`
+
+- Purpose: demonstrate a rehabilitation-themed medical inspection behavior with branching outcome logic.
+- Main behavior sequences:
+  - ``LEAN_SEQ``: move from the alert posture into a closer inspection pose,
+  - ``INSPECT_SEQ``: sweep left and right to inspect an object or patient area,
+  - ``WITHDRAW_SEQ``: return to the alert posture after inspection,
+  - ``VERDICT_SEQ``: final acceptance or refusal motion depending on ``VERDICT``.
+- The global variable ``VERDICT`` selects the final behavior: ``1`` for accept, ``0`` for refuse.
+- Each sequence is converted from Cartesian poses to joint waypoints via the custom IK solver.
+- Separate Ruckig trajectories are generated for lean, inspect, withdraw, and final verdict segments, then executed in order.
+
+Example usage:
+
+```bash
+python Use_Case1_Rehabilitation.py
+```
+
+To switch the final outcome:
+- edit ``VERDICT = 1`` for the accept behavior,
+- edit ``VERDICT = 0`` for the refuse behavior.
+
+What happens:
+- the robot leans in for inspection,
+- performs a left/right inspect sweep,
+- withdraws to the alert posture,
+- then executes either an accept or refuse response.
+
+### `wake_up.py`
+
+- Purpose: perform a wake-up / get-up transition from a docked start pose to an alert pose.
+- Motion sequence: ``DOCKED`` → ``WAKEUP`` → ``ARC_MID`` → ``ALERT``.
+- The script uses a three-segment Ruckig trajectory with velocity blending so the robot moves smoothly through the intermediate ``WAKEUP`` and ``ARC_MID`` poses.
+- This script emphasizes controlled motion rather than stopping fully at every waypoint, making it suitable for a gentle wake-up sequence.
+
+Example usage:
+
+```bash
+python wake_up.py
+```
+
+What happens:
+- the robot moves to a docked start configuration,
+- executes the wake-up transition over a blended trajectory,
+- ends holding the alert posture.
+
 ## File Summary
 
 - `motion_shapes_design.py`: main script that generates shapes, solves IK, and executes a Ruckig trajectory on the robot.
+- `nod_yes.py`: executes a ``yes`` nod gesture using Cartesian IK and a multi-waypoint Ruckig servo trajectory.
+- `refuse_no.py`: executes a ``no`` head-shake gesture using Cartesian pose waypoints and Ruckig control.
+- `Use_Case1_Rehabilitation.py`: medical inspection behavior with lean/inspect/withdraw sequences and configurable accept/refuse final action.
+- `wake_up.py`: wake-up/get-up transition sequence with blended Ruckig motion through intermediate poses.
 - `README.md`: documentation for script usage, configuration, and robot kinematics.
 
 ## Recommended Improvements
