@@ -1,18 +1,27 @@
+<div align="center">
+
 # Natural Manipulator Motion: An Approach Based on Principles of Biomechanics and Animation*
 
-**Wakam Tchinda Henoch · Guangwei Li · Suanon Ifon Felix Marcellin · Haojun Qu · Jinping Li**
+<p align="center"><strong>Wakam Tchinda Henoch · Guangwei Li · Suanon Ifon Felix Marcellin · Haojun Qu · Jinping Li</strong></p>
 
----
+<p align="center">
+![Python](https://img.shields.io/badge/Python-3.13-blue)
+![NumPy](https://img.shields.io/badge/NumPy-Required-brightgreen)
+![Ruckig](https://img.shields.io/badge/Ruckig-Required-orange)
+![Fairino](https://img.shields.io/badge/Fairino-RPC-purple)
+</p>
+
+</div>
 
 ---
 
 ## Abstract
 
-Natural, human-like motion is not only elegant but also essential for the safe integration of robots into human spaces. While learning-driven approaches such as imitation learning and reinforcement learning have shown promising results, optimizing them for human-like behavior remains challenging due to high data requirements and the difficulty of formalizing 'naturalness' within reward functions. In contrast, principle-driven methods based on biomechanics or animation offer more interpretable solutions that extend to new tasks without retraining, but often focus on isolated aspects of motion, neglecting the structural coupling between physical efficiency and perceptual quality. This paper introduces a unified, principle-driven framework for generating natural manipulator motion that operates independently of costly data collection or blind reward engineering. We formulate a definition of natural motion based on three fundamental pillars: expressiveness, efficiency, and smoothness. These are mapped into a three-tier architecture in which (i) expressive intent is encoded using animation principles in structured motion primitives, (ii) efficient configurations are obtained through constrained inverse kinematics that minimizes unnecessary joint motion, and (iii) smooth execution is achieved via jerk-limited trajectory generation. The proposed method is validated on a 6 degree of freedom collaborative robot (Fairino FR5) across a range of interactive tasks. Results show that the generated motions exhibit life-like kinematic and dynamic properties, while operating within the 250 µs control cycle of the target platform. A user study further indicates that 72% of participants perceived the proposed motions as more natural than standard industrial motion profiles.</p>
+<p align="justify">Natural, human-like motion is not only elegant but also essential for the safe integration of robots into human spaces. While learning-driven approaches such as imitation learning and reinforcement learning have shown promising results, optimizing them for human-like behavior remains challenging due to high data requirements and the difficulty of formalizing 'naturalness' within reward functions. In contrast, principle-driven methods based on biomechanics or animation offer more interpretable solutions that extend to new tasks without retraining, but often focus on isolated aspects of motion, neglecting the structural coupling between physical efficiency and perceptual quality. This paper introduces a unified, principle-driven framework for generating natural manipulator motion that operates independently of costly data collection or blind reward engineering. We formulate a definition of natural motion based on three fundamental pillars: expressiveness, efficiency, and smoothness. These are mapped into a three-tier architecture in which (i) expressive intent is encoded using animation principles in structured motion primitives, (ii) efficient configurations are obtained through constrained inverse kinematics that minimizes unnecessary joint motion, and (iii) smooth execution is achieved via jerk-limited trajectory generation. The proposed method is validated on a 6 degree of freedom collaborative robot (Fairino FR5) across a range of interactive tasks. Results show that the generated motions exhibit life-like kinematic and dynamic properties, while operating within the 250 µs control cycle of the target platform. A user study further indicates that 72% of participants perceived the proposed motions as more natural than standard industrial motion profiles.</p>
 
 ---
 
-## Overview
+## 🚀 Overview
 
 `motion_shapes_design.py` is a Python script for generating Cartesian drawing shapes and executing them on a robot using joint-space trajectory planning.
 
@@ -24,7 +33,7 @@ The script:
 - creates a smooth 6-DOF trajectory with Ruckig,
 - streams the resulting joint commands to the robot using `ServoJ`.
 
-## Supported Shapes
+## 🧩 Supported Shapes
 
 The script supports the following shapes:
 - `circle`
@@ -46,7 +55,7 @@ The script supports the following shapes:
 - `cross`
 - `arrow`
 
-## Requirements
+## ⚙️ Requirements
 
 The script depends on the following Python packages and robot SDK modules:
 - `fairino` (Robot RPC interface — refer to the Fairino manual/documentation for installation and usage details)
@@ -58,7 +67,7 @@ The script is written for Python 3.13 and a robotics environment where:
 - `GetInverseKin` is available,
 - `MoveJ`, `ServoMoveStart`, `ServoJ`, `ServoMoveEnd`, and `CloseRPC` are available.
 
-## Configuration
+## ⚙️ Configuration
 
 ### Robot connection
 
@@ -79,7 +88,7 @@ These motion limits are defined in joint-space units:
 - `0.0` means the robot stops at every waypoint.
 - A nonzero value causes smoother transitions through intermediate points.
 
-## DH Parameters
+## 📐 DH Parameters
 
 The robot is described with the following Denavit-Hartenberg parameters for each joint:
 
@@ -94,41 +103,41 @@ The robot is described with the following Denavit-Hartenberg parameters for each
 
 > Note: These values describe the kinematic chain and center-of-mass data. The script itself does not compute dynamics from these values, but the DH table is useful for modeling and simulation.
 
-## How the Script Works
+## 🧠 How the Script Works
 
-### 1. Read current pose
+### 1. Read current pose 🧭
 
 - The script connects to the robot via RPC.
 - It calls `GetActualTCPPose()` to read the current tool pose.
 - The first six values of the returned pose are used as the shape center and orientation.
 
-### 2. Ask user for shape and size
+### 2. Ask user for shape and size 🎯
 
 - The available shapes are displayed.
 - The user inputs a shape name.
 - For `ellipse`, the script asks for semi-major and semi-minor axes.
 - For other shapes, it asks for a size value.
 
-### 3. Generate Cartesian path
+### 3. Generate Cartesian path 📍
 
 - The selected shape is generated in the XY plane around the current TCP pose.
 - Orientation `rx`, `ry`, and `rz` remain fixed from the current pose.
 - Cartesian points are returned as `[x, y, z, rx, ry, rz]`.
 
-### 4. Inverse kinematics
+### 4. Inverse kinematics 🔄
 
 - The function `cartesian_path_to_joint_path()` calls `robot.GetInverseKin(type=0, desc_pos=pose, config=-1)` for each waypoint.
 - Generated joint values are converted from degrees to radians.
 - Joint angles are unwrapped to avoid unnecessary revolutions using `unwrap_joints()`.
 
-### 5. Trajectory generation
+### 5. Trajectory generation 🛣️
 
 - `generate_ruckig_trajectory()` builds a continuous trajectory over the joint waypoints.
 - It sets current and target positions, velocities, accelerations, and jerk limits.
 - Intermediate waypoints can be blended using a nonzero `BLEND_VEL_DEG`.
 - The final waypoint is enforced with zero target velocity.
 
-### 6. Execution
+### 6. Execution ▶️
 
 - The script moves the robot to the first waypoint with a blocking `MoveJ()`.
 - It then starts servo streaming with `ServoMoveStart()`.
@@ -136,7 +145,7 @@ The robot is described with the following Denavit-Hartenberg parameters for each
 - After the trajectory, `ServoMoveEnd()` stops servo streaming.
 - The robot returns to the start configuration at the end.
 
-## Running the Script
+## ▶️ Running the Script
 
 Run the script from the workspace directory:
 
@@ -149,14 +158,14 @@ During execution, you will be prompted to:
 - enter a size,
 - optionally enter ellipse axes.
 
-## Safety and Notes
+## ⚠️ Safety and Notes
 
 - The script uses fixed real-time servo timing; ensure the robot is ready before running.
 - Verify the current TCP pose and workspace clearance before execution.
 - The path generation assumes planar shapes in the XY plane at constant height.
 - If inverse kinematics fails for a generated pose, execution stops and reports the failing waypoint.
 
-## Other Scripts in this Workspace
+## 📦 Other Scripts in this Workspace
 
 ### `nod_yes.py`
 
@@ -242,7 +251,7 @@ python wake_up.py
 - executes the wake-up transition over a blended trajectory,
 - ends holding the alert posture.
 
-## File Summary
+## 📁 File Summary
 
 - `motion_shapes_design.py`: main script that generates shapes, solves IK, and executes a Ruckig trajectory on the robot.
 - `nod_yes.py`: executes a ``yes`` nod gesture using Cartesian IK and a multi-waypoint Ruckig servo trajectory.
@@ -251,7 +260,7 @@ python wake_up.py
 - `wake_up.py`: wake-up/get-up transition sequence with blended Ruckig motion through intermediate poses.
 - `README.md`: documentation for script usage, configuration, and robot kinematics.
 
-## Recommended Improvements
+## 💡 Recommended Improvements
 
 If you extend this project, consider:
 - adding a configuration file for robot IP, speeds, and limits,
