@@ -27,7 +27,7 @@ The script:
 - creates a smooth 6-DOF trajectory with Ruckig,
 - streams the resulting joint commands to the robot using `ServoJ`.
 
-## 🧩 Supported Shapes
+## 🧩 Drawing shapes for investigating RUCKIG parameters
 
 The script supports the following shapes:
 - `circle`
@@ -159,7 +159,7 @@ During execution, you will be prompted to:
 - The path generation assumes planar shapes in the XY plane at constant height.
 - If inverse kinematics fails for a generated pose, execution stops and reports the failing waypoint.
 
-## 📦 Other Scripts in this Workspace
+## 📦 Natural robot motion blocks 
 
 ### `nod_yes.py`
 
