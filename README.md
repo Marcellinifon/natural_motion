@@ -1,4 +1,10 @@
-# Motion Shapes Design
+# Natural Manipulator Motion: An Approach Based on Principles of Biomechanics and Animation*
+
+Wakam Tchinda Henoch, Guangwei Li, Suanon Ifon Felix Marcellin, Haojun Qu, Jinping Li
+
+## Abstract
+
+Natural, human-like motion is not only elegant but also essential for the safe integration of robots into human spaces. While learning-driven approaches such as imitation learning and reinforcement learning have shown promising results, optimizing them for human-like behavior remains challenging due to high data requirements and the difficulty of formalizing 'naturalness' within reward functions. In contrast, principle-driven methods based on biomechanics or animation offer more interpretable solutions that extend to new tasks without retraining, but often focus on isolated aspects of motion, neglecting the structural coupling between physical efficiency and perceptual quality. This paper introduces a unified, principle-driven framework for generating natural manipulator motion that operates independently of costly data collection or blind reward engineering. We formulate a definition of natural motion based on three fundamental pillars: expressiveness, efficiency, and smoothness. These are mapped into a three-tier architecture in which (i) expressive intent is encoded using animation principles in structured motion primitives, (ii) efficient configurations are obtained through constrained inverse kinematics that minimizes unnecessary joint motion, and (iii) smooth execution is achieved via jerk-limited trajectory generation. The proposed method is validated on a 6 degree of freedom collaborative robot (Fairino FR5) across a range of interactive tasks. Results show that the generated motions exhibit life-like kinematic and dynamic properties, while operating within the 250 µs control cycle of the target platform. A user study further indicates that 72% of participants perceived the proposed motions as more natural than standard industrial motion profiles.
 
 ## Overview
 
@@ -37,7 +43,7 @@ The script supports the following shapes:
 ## Requirements
 
 The script depends on the following Python packages and robot SDK modules:
-- `fairino` (Robot RPC interface)
+- `fairino` (Robot RPC interface — refer to the Fairino manual/documentation for installation and usage details)
 - `numpy`
 - `ruckig`
 
