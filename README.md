@@ -15,7 +15,7 @@
 
 ---
 ## Demo
-<video src="\assets\demo.mp4" width="100%" controls></video>
+<video src="./assets/demo.mp4" width="100%" controls></video>
 
 ## 🚀 Overview
 
