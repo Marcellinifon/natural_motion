@@ -16,7 +16,7 @@
 ---
 ## Demo
 <video src="./assets/demo.mp4" width="100%" controls></video>
-
+video available at https://youtu.be/2PNbrYpN9g8
 ## 🚀 Overview
 
 `motion_shapes_design.py` is a Python script for generating Cartesian drawing shapes and executing them on a robot using joint-space trajectory planning.
